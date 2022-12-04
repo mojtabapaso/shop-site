@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # Local App
     'accounts.apps.AccountsConfig',
     'home.apps.HomeConfig',
+    'orders.apps.OrdersConfig',
 
     # Third  Party Apps
     'jalali_date',
