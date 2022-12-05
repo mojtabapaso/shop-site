@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'home.apps.HomeConfig',
     'orders.apps.OrdersConfig',
+    'products.apps.ProductsConfig',
 
-    # Third  Party Apps
+    # Third Party Apps
     'jalali_date',
+    'ckeditor',
 ]
 
 # default settings
@@ -131,8 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa-ir'
 TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
