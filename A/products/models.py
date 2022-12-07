@@ -1,25 +1,28 @@
 from django.db import models
 from django_jalali.db import models as jmodels
-from home.models import Category
+from pages.models import Category
 from ckeditor.fields import RichTextField
+
 
 class Brand(models.Model):
     category = models.ManyToManyField(Category, related_name='brand')
     name = models.CharField(max_length=150)
+
     class Meta:
         verbose_name_plural = "نام تجاری"
 
+
 class Laptop(models.Model):
-    category = models.ManyToManyField(Category, related_name='laptop_category',verbose_name='طبقه بندی ')
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand_laptop',verbose_name='نام تجاری ')
+    category = models.ManyToManyField(Category, related_name='laptop_category', verbose_name='طبقه بندی ')
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand_laptop', verbose_name='نام تجاری ')
     name = models.IntegerField(verbose_name='نام ')
-    slug = models.SlugField(unique=True,verbose_name='اسلاگ ')
+    slug = models.SlugField(unique=True, verbose_name='اسلاگ ')
     image = models.ImageField(verbose_name='عکس ')
     description = RichTextField(verbose_name='توضیحات')
     price = models.IntegerField(verbose_name='قیمت')
     available = models.BooleanField(verbose_name='وجود ')
-    created = jmodels.jDateTimeField(auto_now_add=True,verbose_name='تاریخ اولین ساخت ')
-    updated = jmodels.jDateTimeField(auto_now=True,verbose_name='تاریخ آپدیت')
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ اولین ساخت ')
+    updated = jmodels.jDateTimeField(auto_now=True, verbose_name='تاریخ آپدیت')
 
     # Appearance characteristics
     weight = models.CharField(max_length=200, verbose_name='وزن')
@@ -134,7 +137,7 @@ class Laptop(models.Model):
 
     # Status Product
     status_choices = [('CTO', 'CTO'), ('ORIGINAL', 'ORIGINAL')]
-    hardware = models.CharField(max_length=200,choices=status_choices, verbose_name='وضعیت محصول')
+    hardware = models.CharField(max_length=200, choices=status_choices, verbose_name='وضعیت محصول')
 
     class Meta:
         verbose_name_plural = "لپ تاب"

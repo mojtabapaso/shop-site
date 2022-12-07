@@ -43,3 +43,7 @@ class OtpCode(models.Model):
 
     def __str__(self):
         return f'{self.phone_number} - {self.code} '
+
+    class Meta:
+        verbose_name = "کد ارسالی"
+        verbose_name_plural = 'کدهای ارسالی'

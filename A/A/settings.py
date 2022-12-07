@@ -37,7 +37,7 @@ INSTALLED_APPS = [
 
     # Local App
     'accounts.apps.AccountsConfig',
-    'home.apps.HomeConfig',
+    'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
 
@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'ckeditor',
 ]
 
-# default settings
 JALALI_DATE_DEFAULTS = {
     'Strftime': {
         'date': '%y/%m/%d',
@@ -57,11 +56,11 @@ JALALI_DATE_DEFAULTS = {
             # loading datepicker
             'admin/js/django_jalali.min.js',
             # OR
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
-            #  'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
-            # 'admin/js/main.js',
+            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
+            'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
+            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
+            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
+            'admin/js/main.js',
         ],
         'css': {
             'all': [
@@ -136,9 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'fa-ir'
 TIME_ZONE = 'Asia/Tehran'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -150,3 +147,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Abr Arvan cloud
+aws_access_key_id = 'b6f9c3ff-8cfa-488f-b976-eb644aa21371'
+aws_secret_access_key = '0b2594c48cc82e81f1cc6f21549b0b01f478ce1992a3f7c949f0810cd96b47ad'
+# endpoint_url = ''

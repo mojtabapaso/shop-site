@@ -1,0 +1,35 @@
+{% extends 'blankpage.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'style/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<table class="styled-table">
+    <thead>
+    <tr>
+        <th>شماره تلفن</th>
+        <th>ایمیل</th>
+        <th>نام <br><small><a href="#">تغییر نام</a></small></th>
+        <th>فامیلی<br><small><a href="#">تغییر فامیلی</a></small></th>
+        <th>تاریخ تولد</th>
+        <th>رمز عبور</th>
+
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{request.user.phone_number}}</td>
+        <td>{{request.user.email}}</td>
+        <td>{{request.user.first_name}}</td>
+        <td>{{request.user.last_name}}</td>
+        <td>{{request.user.date_of_birth}}</td>
+        <td><a href="#"> تغییر رمز عبور</a></td>
+    </tr>
+
+    </tbody>
+</table>
+
+{% endblock %}

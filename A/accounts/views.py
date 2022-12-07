@@ -58,7 +58,7 @@ class VerifyCodeRegisterView(View):
                                          password=user_sessions['password'])
                 code_instance.delete()
                 messages.success(request, 'OK ', 'success')
-                return redirect('home:home')
+                return redirect('pages:pages')
             else:
                 messages.error(request, 'Not Math code', 'error')
                 return redirect('accounts:verify_code')
@@ -81,7 +81,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'OK', 'success')
-                return redirect('home:home')
+                return redirect('pages:pages')
             messages.error(request, "Not Good Man", 'error')
         return render(request, self.template_class, {'form': form})
 
@@ -90,4 +90,9 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         messages.success(request, "OK Good boy", 'success')
-        return redirect('home:home')
+        return redirect('pages:pages')
+
+
+class ProfileView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'accounts/profile.html')
