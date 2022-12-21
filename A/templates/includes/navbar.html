@@ -1,0 +1,27 @@
+<div class="top2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="login">
+
+
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'accounts:logout'  %}" class="mybtn"><i class="fa fa-user-o"></i>خروج</a>
+                    <a href="{% url 'accounts:profile' %}" class="mybtn"><i class="fa fa-user-o"></i>پروفایل</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}" class="mybtn"><i class="fa fa-user-plus"></i>ثبت نام</a>
+                    <a href="{% url 'accounts:login'  %}" class="mybtn"><i class="fa fa-user-o"></i>ورود</a>
+                    {% endif %}
+                    <a href="#" class="mybtn"><i class="fa fa-cart-arrow-down"></i>سبد</a>
+                    <a href="{% url 'pages:home' %}" class="mybtn">صفحه اول</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form action="">
+                    <input type="text" placeholder="کالای مورد نظر را جستجو کنید">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

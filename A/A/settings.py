@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +26,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-
+USE_THOUSAND_SEPARATOR = True
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,18 +34,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     # Local App
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
-
     # Third Party Apps
     'jalali_date',
     'ckeditor',
+    # 'iranian_cities',
 ]
 
+# Jalali Config Setting
 JALALI_DATE_DEFAULTS = {
     'Strftime': {
         'date': '%y/%m/%d',
@@ -53,14 +55,14 @@ JALALI_DATE_DEFAULTS = {
     },
     'Static': {
         'js': [
-            # loading datepicker
+            # loading date picker
             'admin/js/django_jalali.min.js',
             # OR
-            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
-            'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
-            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
-            'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
-            'admin/js/main.js',
+            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
+            # 'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
+            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
+            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
+            # 'admin/js/main.js',
         ],
         'css': {
             'all': [
@@ -69,7 +71,7 @@ JALALI_DATE_DEFAULTS = {
         }
     },
 }
-
+# User
 AUTH_USER_MODEL = 'accounts.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -140,9 +142,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
+# MEDIA_ROOT = '/path/to/yourmediafolder/'
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

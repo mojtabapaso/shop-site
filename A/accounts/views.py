@@ -17,7 +17,7 @@ class RegisterView(View):
 
     def get(self, request):
         form = self.form_class
-        return render(request, self.templates_class, {'form': form})
+        return render(request, self.templates_class, context={'form': form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -81,7 +81,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'OK', 'success')
-                return redirect('pages:pages')
+                return redirect('pages:home')
             messages.error(request, "Not Good Man", 'error')
         return render(request, self.template_class, {'form': form})
 
@@ -89,10 +89,14 @@ class LoginView(View):
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        messages.success(request, "OK Good boy", 'success')
-        return redirect('pages:pages')
+        messages.success(request, "OK Good ", 'success')
+        return redirect('pages:home')
 
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'accounts/profile.html')
+
+
+class ChangePasswordView(View):
+    pass

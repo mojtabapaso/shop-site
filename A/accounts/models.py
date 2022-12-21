@@ -5,8 +5,8 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser):
-    email = models.EmailField(unique=True, max_length=250, verbose_name="ایمیل")
     phone_number = models.CharField(max_length=11, unique=True, verbose_name="شماره تلفن")
+    email = models.EmailField(unique=True, max_length=250, verbose_name="ایمیل")
     first_name = models.CharField(max_length=150, verbose_name="اسم")
     last_name = models.CharField(max_length=150, verbose_name="فامیلی")
     date_of_birth = jmodels.jDateField(verbose_name='تاریخ تولد', null=True)

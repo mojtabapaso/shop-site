@@ -1,0 +1,47 @@
+{% extends 'bace.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!--one-slider-->
+            <div>
+                <div>
+                    <div class="center-block ">
+                        <div class="slider ">
+
+                            <img src="{{ product.image.url }}" height="200px">
+                            <h4>{{ product.title }}</h4>
+                            <p>{{ product.price }}</p>
+                            <p>{{ product.description_long|safe }}</p>
+                            <hr>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="center-block">
+    <div class="">
+    <p>{{ commend.body |safe }}</p>
+</div>
+
+</div>
+
+<div>
+    <form action="" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Send">
+    </form>
+</div>
+
+
+{% endblock %}

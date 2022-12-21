@@ -5,8 +5,6 @@ app_name = 'pages'
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
-    path('category/<slug:category_slug>', views.HomeView.as_view(), name='category_filter'),
-    path('<slug:slug>/', views.DetailProductView.as_view(), name='product_detail'),
-
-
+    path('category/<slug:slug_category>', views.HomeView.as_view(), name='category_slug'),
+    path('<slug:slug>/', views.ProductsDetailView.as_view(), name='product_detail'),
 ]

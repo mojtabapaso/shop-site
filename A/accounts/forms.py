@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.messages.context_processors import messages
 from django.core.exceptions import ValidationError
 from .models import User
 from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
@@ -76,3 +77,12 @@ class VerifyCodeForm(forms.Form):
 class UserLoginForm(forms.Form):
     phone_number = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ChangePasswordForm(forms.Form):
+    new_password1 = forms.CharField(widget=forms.PasswordInput())
+    new_password_confirm = forms.CharField(widget=forms.PasswordInput())
+
+    def clean_password(self):
+        if self.new_password1 and self.new_password_confirm and self.new_password1 != self.new_password_confirm:
+            return messages ('password be must mach')
