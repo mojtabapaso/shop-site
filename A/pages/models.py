@@ -3,9 +3,10 @@ from django.urls import reverse
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200)
-    sub_category = models.ForeignKey('self', models.CASCADE, related_name='scategory', null=True, blank=True)
-    is_sub_category = models.BooleanField(default=False)
+    name = models.CharField(max_length=200, verbose_name='نام')
+    sub_category = models.ForeignKey('self', models.CASCADE, related_name='scategory', null=True, blank=True,
+                                     verbose_name='زیر دسته')
+    is_sub_category = models.BooleanField(default=False, verbose_name='آیا زیر دسته است؟')
     slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:

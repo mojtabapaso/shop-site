@@ -28,20 +28,31 @@
         </div>
     </div>
 </div>
-<div class="center-block">
-    <div class="">
-    <p>{{ commend.body |safe }}</p>
-</div>
+<hr>
 
-</div>
+{% for commend in commends %}
+<p>{{ commend.body|safe }}</p>
+
 
 <div>
-    <form action="" method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <input type="submit" value="Send">
-    </form>
+{% if request.user.is_authenticated %}
+<form action="{% url 'pages:add_reply' product.id commend.id %}" method="post">
+    {{ form_reply.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="Send">
+</form>
+{% endif %}
 </div>
 
-
+{% with replies=commend.reply_commend.all %}
+{% for reply in replies %}
+<p> {{reply.body}} </p>
+{% endfor %}
+{% endwith %}
+{% endfor %}
+<form action="" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="Send">
+</form>
 {% endblock %}
