@@ -6,24 +6,18 @@ from .managers import UserManager
 
 class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=11, unique=True, verbose_name="شماره تلفن")
-    email = models.EmailField(unique=True, max_length=250, verbose_name="ایمیل")
-    first_name = models.CharField(max_length=150, verbose_name="اسم")
-    last_name = models.CharField(max_length=150, verbose_name="فامیلی")
-    date_of_birth = jmodels.jDateField(verbose_name='تاریخ تولد', null=True)
     is_active = models.BooleanField(default=True, verbose_name="فعال")
     is_admin = models.BooleanField(default=False, verbose_name="مدیر")
     last_login = jmodels.jDateTimeField(blank=True, null=True, verbose_name='آخرین بازدید')
     objects = UserManager()
-
     USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'date_of_birth', ]
 
     class Meta:
         verbose_name = 'کاربر'
         verbose_name_plural = 'کاربران'
 
     def __str__(self):
-        return self.email
+        return self.phone_number
 
     def has_perm(self, perm, obj=None):
         return True
@@ -47,3 +41,18 @@ class OtpCode(models.Model):
     class Meta:
         verbose_name = "کد ارسالی"
         verbose_name_plural = 'کدهای ارسالی'
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User,blank=True,null=True, on_delete=models.CASCADE, related_name='profile')
+    date_of_berth = models.CharField(max_length=12, blank=True, null=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(max_length=150, blank=True, null=True)
+
+    def __str__(self):
+        return f'{ self.user}'
+
+    class Meta:
+        verbose_name = "پروفایل"
+        verbose_name_plural = 'پروفایل ها'

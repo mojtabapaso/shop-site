@@ -1,21 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="" method="post">
+{% extends 'base.html' %}
+{% load static %}
 
-{% csrf_token %}
+{% block head %}
+<style>
+body{
+    background:rgb(177, 240, 233);
+    
+}
+.class-children{
+align-items: center;
+align-content: center;
+padding-top: 1cm;
 
-{{ form.as_p }}
-    <input type="submit" value="send">
+align-self: start;
+text-align: center;
+margin: auto;
+}
+.grad{
+    box-shadow:#2265e2;
+}
 
-</form>
+
+</style>
+
+{% endblock head %}
+
+{% block title %}ورود{% endblock title %}
+{% block content %}
 
 
-
-
-</body>
-</html>
+<div class="class-child" >
+    <div class="class-children" >
+        <form action="" method="post" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="send" class="grad btn btn-outline-primary">
+        </form>
+    </div>
+</div>
+{% endblock %}

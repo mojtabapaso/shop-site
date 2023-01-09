@@ -1,65 +1,48 @@
-{% extends 'bace.html' %}
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block category %}
+{% for item in categories %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle  " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+       aria-expanded="false">{{ item.name }}</a>
+    {% for sub in item.scategory.all %}
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li><a class="dropdown-item" href="{{ sub.get_absolute_url }}">{{ sub.name }}</a></li>
+        {% endfor %}
+    </ul>
+</li>
+{% endfor %}
+{% endblock category %}
 {% block content %}
 
-<div class="main-menu">
-
-
-    <div class="container">
-
-        <div class="row">
-
-            {% for item in categories %}
-            <div class="col-md-12">
-
-                <ul>
-                    <li><a href="">{{ item.name }}</a>
-                        <ul>
-                            <br>
-                            {% for sub in item.scategory.all %}
-                            <li><a href="{{ sub.get_absolute_url }}">{{ sub.name }}</a>
-                            </li>
-                            {% endfor %}
-
-
-                            </li>
-                        </ul>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<br>
-<!---------------------------------->
-
-
+<!---------------product------------------->
 <div class="container">
     <div class="row">
-
-        <div class="col-md-12">
-            {% for item in products %}
-            <div class="one-slider">
-                <h4>{{ item.title }}</h4>
-                <p>{{ item.price }}</p>
-                <img src="{{ item.image.url }}" alt="333">
-                <a href="{{ item.get_absolute_url }}" >Go</a>
-                <hr>
+        {% for item in products %}
+        <div class="col col-2">
+            <div class="card" style="width:100% ;">
+                <img class="card-img-top " src="{{ item.image.url }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{{ item.price|intcomma:False }} تومان <i class="icofont-price"></i></li>
+                </ul>
+                <div class="btn-group btn-sm">
+                    <!--button add to cart -->
+                    <a href="{% url 'orders:add_cart' item.slug %}" type="button"
+                       class="btn btn-col-6 btn-sm btn-outline-danger"> <i
+                            class="icofont-ui-add"></i></a>
+                    <!-- button info product -->
+                    <a href="{{ item.get_absolute_url }}" type="button" class="btn btn-col-4 btn-outline-info btn-sm"><i
+                            class="icofont-exclamation-square"></i></a>
+                </div>
             </div>
-
-            {% endfor %}
         </div>
-
-
+        {% endfor %}
     </div>
-
 </div>
-
 
 {% endblock %}
 

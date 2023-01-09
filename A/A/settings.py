@@ -26,7 +26,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-USE_THOUSAND_SEPARATOR = True
+# USE_THOUSAND_SEPARATOR = True
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #  Add
     'django.contrib.humanize',
 
     # Local App
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
+
     # Third Party Apps
     'jalali_date',
     'ckeditor',
@@ -73,6 +75,7 @@ JALALI_DATE_DEFAULTS = {
 }
 # User
 AUTH_USER_MODEL = 'accounts.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -96,6 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'orders.processors.cart'
             ],
         },
     },
@@ -130,23 +134,34 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
+
+# Date-Time
 LANGUAGE_CODE = 'fa-ir'
 TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 # MEDIA_ROOT = '/path/to/yourmediafolder/'
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -156,3 +171,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 aws_access_key_id = 'b6f9c3ff-8cfa-488f-b976-eb644aa21371'
 aws_secret_access_key = '0b2594c48cc82e81f1cc6f21549b0b01f478ce1992a3f7c949f0810cd96b47ad'
 # endpoint_url = ''
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+}

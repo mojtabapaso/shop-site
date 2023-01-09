@@ -1,11 +1,14 @@
 from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.contrib.messages.context_processors import messages
+from django.contrib import messages
 from django.core.exceptions import ValidationError
-from .models import User
+from .models import User, Profile
 from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
 from jalali_date.widgets import AdminJalaliDateWidget, AdminSplitJalaliDateTime
+from django.shortcuts import redirect
+from django.core.validators import MinLengthValidator
+from .validator import validate_password, validate_year
 
 
 class UserCreationForm(forms.ModelForm):
@@ -14,7 +17,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'phone_number', 'first_name', 'last_name',)
+        fields = ('phone_number',)
         verbose_name = 'کاربر'
         verbose_name_plural = 'کاربران'
 
@@ -42,20 +45,17 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
-            'email', 'phone_number', 'last_name', 'first_name', 'password', 'date_of_birth', 'is_active', 'is_admin',)
+            'phone_number', 'password', 'is_active', 'is_admin',)
 
 
 class UserRegisterForm(forms.Form):
-    phone_number = forms.CharField(max_length=11)
-    email_form = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'special'}))
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField()
-    date_of_birth = forms.DateField()
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    def __init__(self, *args, **kwargs):
-        super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['date_of_birth'] = JalaliDateField(label=('date_of_birth'), widget=AdminJalaliDateWidget)
+    phone_number = forms.CharField(max_length=11, label='شماره تلفن',
+                                   widget=forms.NumberInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
+    password_1 = forms.CharField(label='رمز عبور', validators=[validate_password, MinLengthValidator(8)],
+                                 widget=forms.PasswordInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
+    password_2 = forms.CharField(label='تائید رمز عبور', validators=[validate_password, MinLengthValidator(8)],
+                                 max_length=128, widget=forms.PasswordInput(
+            attrs={'class': 'alert alert-dark col-md-3 text-center'}))
 
     def clean_number_phone(self):
         phone_number = self.cleaned_data['phone_number']
@@ -63,11 +63,15 @@ class UserRegisterForm(forms.Form):
             raise ValidationError('this number phone already exists !!!')
         return phone_number
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=self.email).exists():
-            raise ValidationError('this email already exists !!!')
-        return email
+    def clean_password(self):
+        """
+        check password mach
+        """
+        password_1 = self.cleaned_data['password_1']
+        password_2 = self.cleaned_data['password_2']
+        if password_1 and password_2 and password_1 != password_2:
+            raise ValidationError('password be must mach')
+        return password_1
 
 
 class VerifyCodeForm(forms.Form):
@@ -75,14 +79,50 @@ class VerifyCodeForm(forms.Form):
 
 
 class UserLoginForm(forms.Form):
-    phone_number = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    phone_number = forms.CharField(label='شماره تلفن',
+                                   widget=forms.NumberInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
+    password = forms.CharField(label='رمز عبور',
+                               widget=forms.PasswordInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
 
 
 class ChangePasswordForm(forms.Form):
-    new_password1 = forms.CharField(widget=forms.PasswordInput())
-    new_password_confirm = forms.CharField(widget=forms.PasswordInput())
+    password_1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control '}), label='رمز عبور',
+                                 validators=[MinLengthValidator(limit_value=8), validate_password])
 
-    def clean_password(self):
-        if self.new_password1 and self.new_password_confirm and self.new_password1 != self.new_password_confirm:
-            return messages ('password be must mach')
+    password_2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control '}), label='تائید رمز عبور')
+
+    def clean(self):
+        cd = super().clean()
+        p1 = cd.get('password_1')
+        p2 = cd.get('password_2')
+        if p1 and p2 and p1 != p2:
+            raise ValidationError("be most mach")
+
+
+days_of_mounts = [
+    (1, '1',), (2, '2',), (3, '3',), (4, '4',), (5, '5',), (6, '6',), (7, '7',), (8, '8',), (9, '9',), (10, '10',),
+    (13, '13',), (14, '14',), (15, '15',), (16, '16',), (11, '11',), (12, '12',), (17, '17',), (18, '18',), (19, '19',),
+    (20, '20',), (21, '21',), (22, '22',), (23, '23',), (24, '24',), (25, '25',), (26, '26',), (27, '27',), (28, '28',),
+    (29, '29',), (30, '30',), (31, '31',)
+]
+mounts_of_year = [
+    (1, 'فروردین',), (2, 'اردیبهشت',), (3, 'خرداد',), (4, 'تیر',), (5, 'مرداد',), (6, 'شهریور',),
+    (7, 'مهر',), (8, 'آبان',), (9, 'آذر',), (10, 'دی',), (11, 'بهمن',), (12, 'اسفند',), ]
+
+
+class DateBirthForm(forms.Form):
+    day = forms.ChoiceField(choices=days_of_mounts)
+    mount = forms.ChoiceField(choices=mounts_of_year)
+    year = forms.IntegerField(validators=[validate_year])
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'email')
+
+
+# class ProfileForm(forms.Form):
+#     first_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'col col-md-4  text-center '}))
+#     last_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'col col-md-4  text-center '}))
+#     email = forms.EmailField(max_length=150, widget=forms.EmailInput(attrs={'class': 'col col-md-4  text-center '}))

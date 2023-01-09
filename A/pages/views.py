@@ -10,6 +10,7 @@ from products.forms import CommendForm, CommendReplyForm
 from products.models import Commend
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+# from orders.forms import ProductAddForm
 
 
 class HomeView(View):
@@ -17,17 +18,17 @@ class HomeView(View):
 
     def get(self, request, slug_category=None):
         categories = Category.objects.filter(is_sub_category=False)
-        products = Products.objects.all()
+        products = Products.objects.filter(is_active =True)
         if slug_category:
             category = Category.objects.filter(slug=slug_category)
-            products = Products.objects.filter(Q(category__in=category))
+            products = Products.objects.filter(Q(category__in=category) )
         return render(request, 'pages/index.html', {'products': products, 'categories': categories})
 
 
 class ProductsDetailView(View):
-    #
     template_name = 'pages/detail.html'
     form_class = CommendForm
+    # form_add_class = ProductAddForm
     form_reply_class = CommendReplyForm
 
     def setup(self, request, *args, **kwargs):
@@ -37,7 +38,8 @@ class ProductsDetailView(View):
 
     def get(self, request, *args, **kwargs):
         context = {'product': self.product, 'form': self.form_class, 'commends': self.commends,
-                   'form_reply': self.form_reply_class}
+                   'form_reply': self.form_reply_class, }
+
         return render(request, self.template_name, context=context)
 
     @method_decorator(login_required)

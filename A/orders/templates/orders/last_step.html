@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<form action="" method="post" novalidate>
+    {{ form_address.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="ثبت" class="btn btn-outline-primary">
+</form>
+
+<form action="{% url 'orders:apply_coupon' %}" method="post" novalidate>
+    {{ form }}
+    {% csrf_token %}
+
+    <input type="submit" value="اعمال" class="btn btn-outline-primary">
+</form>
+
+
+{% endblock %}

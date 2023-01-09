@@ -1,9 +1,9 @@
+from ckeditor.fields import RichTextField
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django_jalali.db import models as jmodels
 from pages.models import Category
-from ckeditor.fields import RichTextField
 
 
 class Brand(models.Model):
@@ -23,8 +23,7 @@ class Products(models.Model):
     price = models.IntegerField(verbose_name='قیمت')
     discount_price = models.IntegerField(blank=True, null=True, verbose_name='درصد تخفیف')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='نام تجاری')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_product',
-                                 verbose_name='دسته بندی')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_product')
     slug = models.SlugField()
     description = RichTextField(default=' ', verbose_name='توضیحات')
     image = models.ImageField(upload_to='static/img', verbose_name='تصویر')
@@ -43,6 +42,9 @@ class Products(models.Model):
     def get_remove_from_cart_url(self):
         return reverse("pages:remove-from-cart", kwargs={'slug': self.slug})
 
+    class Meta:
+        verbose_name_plural = "محصول"
+
 
 class Commend(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, verbose_name='کاربر')
@@ -56,10 +58,6 @@ class Commend(models.Model):
 
     def __str__(self):
         return f'{self.user}/{self.product}/{self.active}/{self.body[:10]}'
-    # def __str__(self):
-    #     return self.product-self.user-self.body[:30]-self.active
-#
-# class LikeAndDislike(models.Model):
-#     user = models.OneToOneField(get_user_model(), on_delete=models.DO_NOTHING)
-#     comment = models.OneToOneField(Commend, on_delete=models.CASCADE)
-#     # like = models.
+
+    class Meta:
+        verbose_name_plural = "نظرات  محصول"

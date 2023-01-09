@@ -12,7 +12,7 @@
                     <a href="{% url 'accounts:register' %}" class="mybtn"><i class="fa fa-user-plus"></i>ثبت نام</a>
                     <a href="{% url 'accounts:login'  %}" class="mybtn"><i class="fa fa-user-o"></i>ورود</a>
                     {% endif %}
-                    <a href="#" class="mybtn"><i class="fa fa-cart-arrow-down"></i>سبد</a>
+                    <a href="{% url 'orders:summary_cart' %}" class="mybtn"><i class="fa fa-cart-arrow-down"></i>سبد</a>
                     <a href="{% url 'pages:home' %}" class="mybtn">صفحه اول</a>
                 </div>
             </div>

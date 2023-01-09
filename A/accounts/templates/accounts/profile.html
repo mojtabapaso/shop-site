@@ -1,35 +1,44 @@
-{% extends 'blankpage.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block head %}
-<link rel="stylesheet" href="{% static 'style/profile.css' %}">
+
 {% endblock %}
 
 {% block content %}
-
-<table class="styled-table">
+<div class="">
+<table class="table table-info table-hover table-bordered table-sm">
     <thead>
     <tr>
-        <th>شماره تلفن</th>
-        <th>ایمیل</th>
-        <th>نام <br><small><a href="#">تغییر نام</a></small></th>
-        <th>فامیلی<br><small><a href="#">تغییر فامیلی</a></small></th>
-        <th>تاریخ تولد</th>
-        <th>رمز عبور</th>
+        <th scope="col">شماره تلفن</th>
+        <th scope="col"> ایمیل<br><small><a href="{% url 'accounts:change_profile' %}">تغییر نام</a></small></th>
+        <th scope="col">نام <br><small><a href="{% url 'accounts:change_profile' %}">تغییر نام</a></small></th>
+        <th scope="col">فامیلی
 
+        <br><small><a href="{% url 'accounts:change_profile' %}">تغییر فامیلی</a></small>
+        </th>
+        <th scope="col"> تاریخ تولد
+               {% if not request.user.profile.date_of_berth  %}
+            <br><small><a href="{% url 'accounts:change_birth' %}">تغییر </a></small>
+            {% endif %} </th>
 
+        <th scope="col">رمز عبور</th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <td>{{request.user.phone_number}}</td>
-        <td>{{request.user.email}}</td>
-        <td>{{request.user.first_name}}</td>
-        <td>{{request.user.last_name}}</td>
-        <td>{{request.user.date_of_birth}}</td>
-        <td><a href="#"> تغییر رمز عبور</a></td>
+        <td>{{request.user.profile.email}}</td>
+        <td>{{request.user.profile.first_name}}</td>
+        <td>{{request.user.profile.last_name}}</td>
+        <td>{{request.user.profile.date_of_berth}}</td>
+        <td><a href="{% url 'accounts:change_password' %}"> تغییر رمز عبور</a></td>
     </tr>
 
     </tbody>
 </table>
+</div>
+
+
+
 
 {% endblock %}
