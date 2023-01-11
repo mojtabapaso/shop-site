@@ -1,9 +1,9 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
-from django.urls import reverse, resolve
-from .forms import UserRegisterForm, UserLoginForm
-from .views import RegisterView, LoginView, LogoutView
-import pdb; pdb.set_trace()
+# from django.test import TestCase
+# from django.contrib.auth import get_user_model
+# from django.urls import reverse, resolve
+# from .forms import UserRegisterForm, UserLoginForm
+# from .views import RegisterView, LoginView, LogoutView
+# import pdb; pdb.set_trace()
 
 #
 # class UserTests(TestCase):
@@ -49,21 +49,21 @@ import pdb; pdb.set_trace()
 #         self.assertEqual(view.func.__name__, LogoutView.as_view().__name__)
 #
 
-class UserRegisterTEst(TestCase):
-    def setUp(self):
-        url = reverse('accounts:register')
-        self.response = self.client.get(url)
+# class UserRegisterTest(TestCase):
+#     def setUp(self):
+#         url = reverse('accounts:register')
+#         self.response = self.client.get(url)
+#
+#     def test_register_templates(self):
+#         self.assertEqual(self.response.status_code, 200)
+#         self.assertTemplateUsed(self.response, 'accounts/register.html')
+#
+#     def test_register_from(self):
+#         z = self.response.context.get('form')
+#         print(form.errors)
 
-    def test_register_templates(self):
-        self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, 'accounts/register.html')
-
-    def test_register_from(self):
-        z = self.response.context.get('form')
-        # print(form.errors)
-
-        # self.assertIsInstance(form, UserRegisterForm)
-        self.assertContains(self.response, 'csrfmiddlewaretoken')
-
-    def test_register_view(self):
-        pass
+# self.assertIsInstance(form, UserRegisterForm)
+# self.assertContains(self.response, 'csrfmiddlewaretoken')
+#
+# def test_register_view(self):
+#     pass

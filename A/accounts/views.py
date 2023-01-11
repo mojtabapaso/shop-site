@@ -28,12 +28,7 @@ class RegisterView(View):
             send_otp_code = (form.cleaned_data['phone_number'], random_code)
             OtpCode.objects.create(phone_number=form.cleaned_data['phone_number'], code=random_code)
             cd = form.cleaned_data
-            request.session['user_registered_info'] = {'phone_number': cd['phone_number'],
-                                                       'email': cd['email_form'],
-                                                       'first_name': cd['first_name'],
-                                                       'last_name': cd['last_name'],
-                                                       'date_of_birth': cd['date_of_birth'].strftime('%Y-%m-%d'),
-                                                       'password': cd['password']}
+            request.session['user_registered_info'] = {'phone_number': cd['phone_number'], 'password': cd['password']}
             messages.success(request, 'we sent you a code', 'success')
             return redirect('accounts:verify_code')
 
