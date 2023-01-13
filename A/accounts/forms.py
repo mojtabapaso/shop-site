@@ -1,19 +1,16 @@
-from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.contrib import messages
 from django.core.exceptions import ValidationError
 from .models import User, Profile
-from jalali_date.fields import JalaliDateField, SplitJalaliDateTimeField
-from jalali_date.widgets import AdminJalaliDateWidget, AdminSplitJalaliDateTime
-from django.shortcuts import redirect
 from django.core.validators import MinLengthValidator
 from .validator import validate_password, validate_year
 
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput,
+                                validators=[validate_password, MinLengthValidator(8)])
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput,
+                                validators=[validate_password, MinLengthValidator(8)])
 
     class Meta:
         model = User
@@ -120,9 +117,3 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('first_name', 'last_name', 'email')
-
-
-# class ProfileForm(forms.Form):
-#     first_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'col col-md-4  text-center '}))
-#     last_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'col col-md-4  text-center '}))
-#     email = forms.EmailField(max_length=150, widget=forms.EmailInput(attrs={'class': 'col col-md-4  text-center '}))
