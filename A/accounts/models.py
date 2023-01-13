@@ -51,7 +51,7 @@ class Profile(models.Model):
     email = models.EmailField(max_length=150, blank=True, null=True)
 
     def __str__(self):
-        return f'{ self.user}'
+        return f'{self.user}'
 
     class Meta:
         verbose_name = "پروفایل"

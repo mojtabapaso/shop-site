@@ -32,38 +32,45 @@ class UserModelTest(TestCase):
 
 
 class OtpCodeTest(TestCase):
+
     def setUp(self):
-        otp_code = OtpCode.objects.create(phone_number='09331111111', code=11111)
+        self.otp_code = OtpCode.objects.create(phone_number='09331111111', code=11111)
 
     def test_str_otp(self):
+        """ test for func __str__ """
         otp = OtpCode(phone_number='09331111111', code=11111)
         self.assertEqual(str(otp), f'{otp.phone_number} - {otp.code} ')
 
     def test_otp(self):
         otp = OtpCode.objects.get(id=1)
-        phone_number = f"{otp.phone_number}"
-        code = otp.code
-        self.assertEqual(phone_number, '09331111111')
-        self.assertEqual(code, 11111)
+        self.assertEqual(str(otp.phone_number), '09331111111')
+        self.assertEqual(otp.code, 11111)
+        self.assertEqual(otp.created, self.otp_code.created)
 
 
 class ProfileModelTest(TestCase):
+
     def setUp(self):
-        user=User.objects.create_user(phone_number='09335215295', password='123456')
-        # user = User.objects.get(id=1)
-
-        profile = Profile.objects.create(user=user, date_of_berth='1379-12-28', first_name='mojtaba', last_name='ataei',
-                                         email='mojtabapaso@gmail.com')
-
-    def test_str_profile(self):
-        pass
+        self.user = User.objects.create_user(phone_number='09331111111', password='123456')
+        Profile.objects.update(user=self.user, date_of_berth='1379-12-28', first_name='mojtaba',
+                               last_name='ataei', email='mojtabapaso@gmail.com')
+        self.profile = Profile.objects.get(user=self.user)
 
     def test_profile(self):
+        """ test data in profile """
         profile = Profile.objects.get(id=1)
-        user = User.objects.last()
-        first_name = profile.first_name
-        last_name = profile.last_name
-        date_of_berth = profile.date_of_berth
-        user_profile = profile.user
-        email = profile.email
-        self.assertEqual(user_profile, user)
+        self.assertEqual(profile.first_name, self.profile.first_name)
+        self.assertEqual(profile.last_name, self.profile.last_name)
+        self.assertEqual(profile.date_of_berth, self.profile.date_of_berth)
+        self.assertEqual(profile.email, self.profile.email)
+        self.assertEqual(profile.user.phone_number, self.profile.user.phone_number)
+
+    def test_one_profile(self):
+        """ test for every user just one profile no two or more """
+        profile = Profile.objects.get(id=1)
+        self.assertTrue(len(profile.user.phone_number), 1)
+        self.assertTrue(len(self.profile.user.phone_number), 1)
+
+    def test_str_profile(self):
+        profile = Profile.objects.get(id=1)
+        self.assertEqual(str(profile.user), str(self.user.phone_number))
