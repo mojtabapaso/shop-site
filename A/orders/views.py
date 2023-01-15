@@ -6,8 +6,8 @@ from .models import Cart, Order
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import ApplyCouponForm, Address
-from .models import Coupon
+from .forms import ApplyCouponForm, AddressForm
+from .models import Coupon, Address
 
 
 class OrderView(View):
@@ -18,7 +18,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
     """ for show information cart
 
     if user input a code coupon in form
-    validate them and true apply them
+    validate  and true apply
     """
 
     templates_class = 'orders/summary.html'
@@ -72,20 +72,32 @@ class ApplyCouponView(LoginRequiredMixin, View):
         return redirect('orders:last_step')
 
 
-class LastStepView(View):
+class LastStepView(LoginRequiredMixin, View):
     from_class = ApplyCouponForm
-    form_address = Address
+    form_address = AddressForm
+
     templates = 'orders/last_step.html'
 
     def get(self, request):
-        return render(request, self.templates, {'form': self.from_class, 'form_address': self.form_address})
+        address = Address.objects.filter(user=request.user)
+        print(request.user.address_user)
+        print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+        for i in address:
+            print(i.address)
+
+        print(request.user.address_user)
+        return render(request, self.templates,
+                      {'form': self.from_class, 'form_address': self.form_address, 'address': address})
 
     def post(self, request):
         form = self.form_address(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             Address.objects.create(user=request.user, address=cd['address'])
+            messages.success(request, 'go to pay', 'info')
             return redirect('orders:last_step')
+        messages.error(request, 'rid', 'danger')
+        return redirect('pages:home')
 
 
 @login_required

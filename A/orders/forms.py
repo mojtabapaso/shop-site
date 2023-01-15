@@ -11,8 +11,5 @@ class ApplyCouponForm(forms.Form):
                              widget=forms.TextInput(attrs={'class': 'class-alert alert col-md-2'}))
 
 
-class AddressForm(forms.ModelForm):
-    class Meta:
-        model = Address
-        fields = ('address',)
-
+class AddressForm(forms.Form):
+    address = forms.CharField(label="آدرس", max_length=500)

@@ -32,7 +32,7 @@ class Order(models.Model):
     start_date = jmodels.jDateTimeField(auto_now_add=True, verbose_name='تاریخ خرید')
     ordered_date = jmodels.jDateTimeField(verbose_name='تاریخ سفارش')
     ordered = models.BooleanField(default=False, verbose_name='سفارش داده شده است')
-    address = models.CharField(max_length=500, verbose_name='آدرس',)
+    address = models.CharField(max_length=500, verbose_name='آدرس', )
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='پرداخت')
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='کد تخفیف')
     received = models.BooleanField(default=False, verbose_name='تحویل داده شده')
@@ -55,6 +55,7 @@ class Order(models.Model):
 
 
 class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='address_user')
     address = models.CharField(max_length=500)
 
     class Meta:
@@ -72,8 +73,7 @@ class Payment(models.Model):
 
 
 class Coupon(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='related_in_coupon',
-                             related_query_name='related_query_coupon')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='related_in_coupon')
     code = models.CharField(max_length=15, null=True, blank=True, help_text="Auto dont input any thing")
     amount = models.IntegerField(verbose_name='مقدار', null=True, blank=True)
     min_order = models.IntegerField(verbose_name='حداقل سفارش ', null=True, blank=True)
