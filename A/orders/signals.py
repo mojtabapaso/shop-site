@@ -8,15 +8,6 @@ from .create_coupon import create_coupon
 def create_profile(sender, instance, **kwargs):
     if kwargs['created']:
         code = Coupon.objects.filter(user=instance.user)
-        print('-----------------------------------------')
-
-        print(code)
-        print('-----------------------------------------')
         for i in code:
             i.code = create_coupon()
-            print('-----------------------------------------')
-
-            print(i)
-            print('-----------------------------------------')
-
             i.save()
