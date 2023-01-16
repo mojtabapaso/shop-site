@@ -28,7 +28,7 @@ class RegisterView(View):
             send_otp_code = (form.cleaned_data['phone_number'], random_code)
             OtpCode.objects.create(phone_number=form.cleaned_data['phone_number'], code=random_code)
             cd = form.cleaned_data
-            request.session['user_registered_info'] = {'phone_number': cd['phone_number'], 'password': cd['password']}
+            request.session['user_registered_info'] = {'phone_number': cd['phone_number'], 'password': cd['password_1']}
             messages.success(request, 'we sent you a code', 'success')
             return redirect('accounts:verify_code')
 
@@ -133,11 +133,11 @@ class ChangePasswordView(LoginRequiredMixin, View):
             messages.success(request, 'رمز شما با موفقیت تغییر یافت', 'success')
             return redirect('pages:home')
 
-        if ValidationError:
-            messages.error(request, 'رمز انتخابی باید برابر باشد', 'danger')
-            messages.error(request, ' رمز انتخابی باید بیشتر از 8 رقم و ترکیبی از رقم و حروف کوچک و بزرگ انگلیسی باشد.',
-                           'warning')
-            return redirect('accounts:change_password')
+        # if ValidationError:
+        #     messages.error(request, 'رمز انتخابی باید برابر باشد', 'danger')
+        #     messages.error(request, ' رمز انتخابی باید بیشتر از 8 رقم و ترکیبی از رقم و حروف کوچک و بزرگ انگلیسی باشد.',
+        #                    'warning')
+        #     return redirect('accounts:change_password')
 
         messages.error(request, 'مشکلی پیش آمد لطفا دوباره تلاش کنید', 'danger')
         return redirect('accounts:change_password')

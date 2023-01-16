@@ -1,16 +1,17 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+
+# from orders.models import Address
 from .models import User, Profile
 from django.core.validators import MinLengthValidator
-from .validator import validate_password, validate_year
+from .validator import validate_year
+from django.contrib.auth.password_validation import validate_password
 
 
 class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput,
-                                validators=[validate_password, MinLengthValidator(8)])
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput,
-                                validators=[validate_password, MinLengthValidator(8)])
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput, validators=[validate_password])
+    password2 = forms.CharField(label='Password confirm', widget=forms.PasswordInput, validators=[validate_password])
 
     class Meta:
         model = User
@@ -41,23 +42,22 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = (
-            'phone_number', 'password', 'is_active', 'is_admin',)
+        fields = ('phone_number', 'password', 'is_active', 'is_admin',)
 
 
 class UserRegisterForm(forms.Form):
     phone_number = forms.CharField(max_length=11, label='شماره تلفن',
                                    widget=forms.NumberInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
-    password_1 = forms.CharField(label='رمز عبور', validators=[validate_password, MinLengthValidator(8)],
+    password_1 = forms.CharField(label='رمز عبور', validators=[validate_password],
                                  widget=forms.PasswordInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
-    password_2 = forms.CharField(label='تائید رمز عبور', validators=[validate_password, MinLengthValidator(8)],
-                                 max_length=128, widget=forms.PasswordInput(
-            attrs={'class': 'alert alert-dark col-md-3 text-center'}))
+    password_2 = forms.CharField(label='تائید رمز عبور', validators=[validate_password],
+                                 max_length=128,
+                                 widget=forms.PasswordInput(attrs={'class': 'alert alert-dark col-md-3 text-center'}))
 
     def clean_number_phone(self):
         phone_number = self.cleaned_data['phone_number']
         if User.objects.filter(phone_number=self.phone_number).exists():
-            raise ValidationError('this number phone already exists !!!')
+            raise ValidationError('این شماره تلفن در حال حاضر موجود است')
         return phone_number
 
     def clean_password(self):
@@ -67,7 +67,7 @@ class UserRegisterForm(forms.Form):
         password_1 = self.cleaned_data['password_1']
         password_2 = self.cleaned_data['password_2']
         if password_1 and password_2 and password_1 != password_2:
-            raise ValidationError('password be must mach')
+            raise ValidationError('رمز ها باید برابر باشند')
         return password_1
 
 
@@ -83,10 +83,11 @@ class UserLoginForm(forms.Form):
 
 
 class ChangePasswordForm(forms.Form):
-    password_1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control '}), label='رمز عبور',
-                                 validators=[MinLengthValidator(limit_value=8), validate_password])
+    password_1 = forms.CharField(widget=forms.PasswordInput(), label='رمز عبور',
+                                 validators=[validate_password])
 
-    password_2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control '}), label='تائید رمز عبور')
+    password_2 = forms.CharField(widget=forms.PasswordInput(), label='تائید رمز عبور',
+                                 validators=[validate_password])
 
     def clean(self):
         cd = super().clean()
@@ -117,3 +118,8 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('first_name', 'last_name', 'email')
+
+# class AddressForm(forms.ModelForm):
+#     class Meta:
+#         model = Address
+#         fields = ('address',)
