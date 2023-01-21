@@ -53,7 +53,7 @@ class ProfileModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(phone_number='09331111111', password='123456')
         Profile.objects.update(user=self.user, date_of_berth='1379-12-28', first_name='mojtaba',
-                               last_name='ataei', email='mojtabapaso@gmail.com')
+                               last_name='ataei', email='mojtabapaso@gmail.com', address='just a test address')
         self.profile = Profile.objects.get(user=self.user)
 
     def test_profile(self):
@@ -64,6 +64,7 @@ class ProfileModelTest(TestCase):
         self.assertEqual(profile.date_of_berth, self.profile.date_of_berth)
         self.assertEqual(profile.email, self.profile.email)
         self.assertEqual(profile.user.phone_number, self.profile.user.phone_number)
+        self.assertEqual(profile.address, self.profile.address)
 
     def test_one_profile(self):
         """ test for every user just one profile no two or more """
@@ -72,5 +73,6 @@ class ProfileModelTest(TestCase):
         self.assertTrue(len(self.profile.user.phone_number), 1)
 
     def test_str_profile(self):
+        """ __str__"""
         profile = Profile.objects.get(id=1)
         self.assertEqual(str(profile.user), str(self.user.phone_number))

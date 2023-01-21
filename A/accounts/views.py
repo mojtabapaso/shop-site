@@ -7,6 +7,7 @@ from random import randint
 from jalali_date import datetime2jalali, date2jalali
 from .models import OtpCode, Profile
 from utils import send_otp_code
+
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -63,6 +64,10 @@ class LoginView(View):
     form_class = UserLoginForm
     template_class = 'accounts/login.html'
 
+    def setup(self, request, *args, **kwargs):
+        self.next = request.GET.get('next')
+        return super().setup(request, *args, **kwargs)
+
     def get(self, request):
         form = self.form_class
         return render(request, self.template_class, {'form': form})
@@ -75,6 +80,8 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Welcome', 'success')
+                if self.next:
+                    return redirect(self.next)
                 return redirect('pages:home')
             messages.error(request, "Not Good Man", 'danger')
         return render(request, self.template_class, {'form': form})
