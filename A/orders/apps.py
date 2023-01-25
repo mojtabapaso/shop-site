@@ -7,4 +7,4 @@ class OrdersConfig(AppConfig):
     verbose_name = "سفارشات"
 
     def ready(self):
-        from. import signals
+        from . import signals

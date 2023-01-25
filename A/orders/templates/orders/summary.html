@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
-{% block content %}
+
 {% load humanize %}
 {% block head  %}
 <style>
     .none_line{text-decoration: none;}
 
+
+
+
 </style>
 {% endblock head %}
-
+{% block content %}
 
 {% if cart  %}
 <table class="table">
@@ -20,6 +23,7 @@
         <th scope="col">قیمت کل</th>
         <th scope="col">وضعیت</th>
     </tr>
+
     {% for object in cart %}
 
 
@@ -29,7 +33,7 @@
         <td>{{ object.item.title }}</td>
         <td>{{ object.item.price|intcomma:False }}</td>
         <td>{{ object.quantity|intcomma:False }}</td>
-        <td>{{ object.get_total_item_price|intcomma:False }}</td>
+        <td>{{ object.price_item|intcomma:False }}</td>
         <td>
             <a href="{% url 'orders:remove_cart' object.item.slug %}" class="btn btn-danger"><i
                     class="icofont-trash"></i></a>
@@ -41,18 +45,18 @@
     </tr>
     </tbody>
     {% endfor %}
-<tr>
-    <td></td>
-    <td>قیمت کل</td>
-    <td colspan="2"></td>
-    <td>
-        {{ total_price|intcomma:False }}
-    </td>
-</tr>
+    <tr>
+        <td>{{ price_item }}</td>
+        <td>قیمت کل</td>
+        <td colspan="2"></td>
+        <td>
+            {{ total_price|intcomma:False }}
+        </td>
+    </tr>
 </table>
 
-<a class="btn btn-outline-info" href="{% url 'orders:last_step' %}">مرحله بعد</a>
 
+<a class="btn btn-outline-info" href="{% url 'orders:create_order' %}">NEXT</a>
 
 
 {% else %}

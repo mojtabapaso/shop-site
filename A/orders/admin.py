@@ -1,9 +1,14 @@
 from django.contrib import admin
-from .models import Address, Order, Cart, Coupon
+from .models import Order, Cart, Coupon
 
 
-admin.site.register(Address)
-admin.site.register(Order)
+# admin.site.register(Address)
+# admin.site.register(Order)
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    readonly_fields = ("items",)
+
+
 admin.site.register(Cart)
 
 
