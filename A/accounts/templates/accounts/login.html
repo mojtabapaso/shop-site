@@ -1,41 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block head %}
-<style>
-body{
-    background:rgb(177, 240, 233);
-    
-}
-.class-children{
-align-items: center;
-align-content: center;
-padding-top: 1cm;
-
-align-self: start;
-text-align: center;
-margin: auto;
-}
-.grad{
-    box-shadow:#2265e2;
-}
-
-
-</style>
-
-{% endblock head %}
 
 {% block title %}ورود{% endblock title %}
 {% block content %}
 
 
-<div class="class-child" >
-    <div class="class-children" >
-        <form action="" method="post" >
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="send" class="grad btn btn-outline-primary">
-        </form>
-    </div>
-</div>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="send" class="grad btn btn-outline-primary">
+</form>
+<a class="btn btn-out-line-info" href="{% url 'accounts:forget_password' %}">رمز عبور را فراموش کردید!</a>
+
 {% endblock %}

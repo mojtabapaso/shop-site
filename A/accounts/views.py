@@ -1,16 +1,15 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import UserRegisterForm, VerifyCodeForm, UserLoginForm, ChangePasswordForm, DateBirthForm, ProfileForm
+from .forms import UserRegisterForm, VerifyCodeForm, UserLoginForm, ChangePasswordForm, DateBirthForm, ProfileForm, \
+    NumberPhoneForgetPassword
 from .models import User
 from random import randint
 from jalali_date import datetime2jalali, date2jalali
 from .models import OtpCode, Profile
 from utils import send_otp_code
-
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from django.core.exceptions import ValidationError
 
 
@@ -26,7 +25,7 @@ class RegisterView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             random_code = randint(10000, 99999)
-            send_otp_code = (form.cleaned_data['phone_number'], random_code)
+            send_otp_code(form.cleaned_data['phone_number'], random_code)
             OtpCode.objects.create(phone_number=form.cleaned_data['phone_number'], code=random_code)
             cd = form.cleaned_data
             request.session['user_registered_info'] = {'phone_number': cd['phone_number'], 'password': cd['password_1']}
@@ -139,13 +138,6 @@ class ChangePasswordView(LoginRequiredMixin, View):
             user.save()
             messages.success(request, 'رمز شما با موفقیت تغییر یافت', 'success')
             return redirect('pages:home')
-
-        # if ValidationError:
-        #     messages.error(request, 'رمز انتخابی باید برابر باشد', 'danger')
-        #     messages.error(request, ' رمز انتخابی باید بیشتر از 8 رقم و ترکیبی از رقم و حروف کوچک و بزرگ انگلیسی باشد.',
-        #                    'warning')
-        #     return redirect('accounts:change_password')
-
         messages.error(request, 'مشکلی پیش آمد لطفا دوباره تلاش کنید', 'danger')
         return redirect('accounts:change_password')
 
@@ -189,3 +181,65 @@ class ChangeDateBirth(LoginRequiredMixin, View):
             return redirect('accounts:profile')
         messages.error(request, 'not good ', 'danger')
         return redirect('accounts:change_birth')
+
+
+class ForgetPasswordView(View):
+    form_class = NumberPhoneForgetPassword
+    template_class = 'accounts/forget_password.html'
+
+    def get(self, request):
+        return render(request, self.template_class, {'form': self.form_class})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = User.objects.get(phone_number=cd['number_phone'])
+            if user:
+                random_code = randint(10000, 99999)
+                send_otp_code(cd['number_phone'], random_code)
+                OtpCode.objects.create(phone_number=cd['number_phone'], code=random_code)
+                request.session['user_forget_password'] = {'number_phone': cd['number_phone']}
+                messages.success(request, 'we sent you a code', 'success')
+                return redirect('accounts:verify_password')
+            messages.success(request, 'کاربری پیدا نشد!!!', 'danger')
+            return redirect('accounts:forget_password')
+        messages.success(request, 'کاربری پیدا نشد!!!', 'danger')
+        return redirect('accounts:forget_password')
+
+
+class VerifyCodePassword(View):
+    form_class = VerifyCodeForm
+    template_class = 'accounts/verify_password.html'
+
+    def get(self, request):
+        return render(request, self.template_class, {'form': self.form_class})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            phone = request.session['user_forget_password']['number_phone']
+            otp = OtpCode.objects.get(phone_number=phone)
+            if otp.code == code:
+                return redirect('accounts:create_password')
+
+
+class CreateNewPassword(View):
+    form_class = ChangePasswordForm
+    template_class = 'accounts/create_password.html'
+
+    def get(self, request):
+        return render(request, self.template_class, {'form': self.form_class})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            phone = request.session['user_forget_password']['number_phone']
+            user = User.objects.get(user=phone)
+            user.set_password(form.cleaned_data['password_1'])
+            user.save()
+            messages.success(request, 'رمز شما با موفقیت تغییر یافت', 'success')
+            return redirect('accounts:login')
+        messages.error(request, 'مشکلی پیش آمد دوباره تلاش کنید!', 'danger')
+        return redirect('accounts:create_password')
