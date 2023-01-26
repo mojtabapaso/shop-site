@@ -99,7 +99,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'orders.processors.cart'
             ],
         },
     },
@@ -146,20 +145,14 @@ TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 # MEDIA_ROOT = '/path/to/yourmediafolder/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-
-
-
-
+# MEDIA_URL = '/static/'
+# MEDIA_ROOT = BASE_DIR / 'static'
 
 
 # Default primary key field type

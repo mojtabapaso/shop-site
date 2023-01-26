@@ -2,11 +2,10 @@ from django.contrib import admin
 from .models import Order, Cart, Coupon
 
 
-# admin.site.register(Address)
-# admin.site.register(Order)
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    readonly_fields = ("items",)
+    fields = ('items', 'user', 'address', 'ordered_date', 'ordered', 'all_price', 'price_pey', 'price_coupon')
+    readonly_fields = ('items', 'user', 'ordered_date')
 
 
 admin.site.register(Cart)

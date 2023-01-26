@@ -1,3 +1,4 @@
+import jdatetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
@@ -12,7 +13,7 @@ from permissions import requires_address, AddressIsNotNone, CartIsNotNone
 import requests
 import json
 from django.http import HttpResponse
-# import reportlab
+import datetime
 User = get_user_model()
 
 
@@ -21,78 +22,35 @@ class OrderSummaryView(LoginRequiredMixin, View):
     if user input a code coupon in form
     validate  and true apply
     """
-    total_price = 0
+
     templates_class = 'orders/summary.html'
 
     def get(self, request):
         cart = Cart.objects.filter(user=request.user, ordered=False)
+        total_price = 0
         if cart:
             # get total price order
             for i in cart:
-                self.total_price += i.price_item()
-                # save in session and use in template and validate in post func
-
-            return render(request, self.templates_class, {'cart': cart, 'total_price': self.total_price})
+                total_price += i.price_item()
+            return render(request, self.templates_class, {'cart': cart, 'total_price': total_price})
         return render(request, self.templates_class)
-    # def post(self, request):
-    #     Order.objects.get_or_create(user=request.user)
-
-    # def post(self, request):
-    #     form = self.form_coupon(request.POST)
-    #     if not form.data['coupon']:
-    #         # validate form is not empty
-    #         messages.success(request, 'کد تخفیفی وارد نشده است !', 'danger')
-    #         return redirect('orders:summary_cart')
-    #     if form.is_valid():
-    #         coupon = form.cleaned_data['coupon']
-    #         # check coupon code for exist in database and belong to the user
-    #         try:
-    #             amount = request.user.related_in_coupon.get(code=coupon, is_active=True)
-    #         except:
-    #             if Coupon.objects.filter(code=coupon, is_active=False):
-    #                 messages.success(request, 'این کد منقضی شده است', 'danger')
-    #                 return redirect('orders:summary_cart')
-    #
-    #             elif Coupon.objects.filter(code=coupon):
-    #                 messages.success(request, 'این کد متعلق به کاربر دیگری میباشد', 'danger')
-    #                 return redirect('orders:summary_cart')
-    #
-    #             messages.success(request, 'کد صحیح نمی باشد !!!', 'danger')
-    #             return redirect('orders:summary_cart')
-    #             # for validate a coupon and min_order them
-    #         if int(request.session['total_price']['total']) < int(amount.min_order):
-    #             messages.success(request, f'حداقل مقدار خرید برای کد تخفیف {amount.min_order} میباشد', 'info')
-    #             return redirect('orders:summary_cart')
-    #
-    #     after_coupon = int(request.session['total_price']['total']) - int(
-    #         request.user.related_in_coupon.get(code=coupon, is_active=True).amount)
-    #     request.session['total_price']['total'] = after_coupon
-    #     self.ddd = after_coupon
-    #     messages.success(request,
-    #                      f'کد شما اعمال شد و مبلغ{amount.amount} کم شد مبلغ قابل پرداخت {after_coupon} می باشد',
-    #                      'success')
-    #
-    #     request.session.modified = True
-    #
-    #     request.session.save()
-    #     return redirect('orders:summary_cart')
-    #     return render(request, self.templates_class, {'ddd': after_coupon})
 
 
-# Url
 class OrderView(LoginRequiredMixin, AddressIsNotNone, CartIsNotNone, View):
-    templates_class = 'orders/coupon.html'
+    """
+    create receipt and apply coupon in order if existed!
+    """
+    templates_class = 'orders/receipt_coupon.html'
     form_class = ApplyCouponForm
 
     def setup(self, request, *args, **kwargs):
-        self.order = Order.objects.filter(user=request.user)
-        for self.item in self.order:
-            self.item
+        self.order = Order.objects.get(user=request.user)
+
         return super().setup(request, *args, **kwargs)
 
     def get(self, request):
 
-        return render(request, 'orders/coupon.html', {'form': self.form_class, 'order': self.order})
+        return render(request, self.templates_class, {'form': self.form_class, 'order': self.order})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -117,14 +75,14 @@ class OrderView(LoginRequiredMixin, AddressIsNotNone, CartIsNotNone, View):
                 messages.success(request, 'کد صحیح نمی باشد !!!', 'danger')
                 return redirect('orders:order_item')
                 # for validate a coupon and min_order them
-            if self.item.all_price < int(amount.min_order):
+            if self.order.all_price < int(amount.min_order):
                 messages.success(request, f'حداقل مقدار خرید برای کد تخفیف {amount.min_order} میباشد', 'info')
                 return redirect('orders:order_item')
 
-        after_coupon = self.item.all_price - request.user.related_in_coupon.get(code=coupon, is_active=True).amount
-        self.item.price_pey = int(after_coupon)
-        self.item.price_coupon = int(amount.amount)
-        self.item.save()
+        after_coupon = self.order.all_price - request.user.related_in_coupon.get(code=coupon, is_active=True).amount
+        self.order.price_pey = int(after_coupon)
+        self.order.price_coupon = int(amount.amount)
+        self.order.save()
         messages.success(request,
                          f'کد شما اعمال شد و مبلغ{amount.amount} کم شد مبلغ قابل پرداخت {after_coupon} می باشد',
                          'success')
@@ -147,7 +105,7 @@ class OrderPayView(LoginRequiredMixin, View):
         }
         req_data = {
             "merchant_id": MERCHANT,
-            "amount": order.total(),
+            "amount": order.pay(),
             "callback_url": CallbackURL,
             "description": description,
             "metadata": {"mobile": request.user, "email": request.user.profile.email}
@@ -184,6 +142,8 @@ class OrderVerifyView(LoginRequiredMixin, View):
                 t_status = req.json()['data']['code']
                 if t_status == 100:
                     order.ordered = True
+                    order.ordered_date = jdatetime.datetime.now()
+
                     order.save()
                     return HttpResponse('Transaction success.\nRefID: ' + str(
                         req.json()['data']['ref_id']

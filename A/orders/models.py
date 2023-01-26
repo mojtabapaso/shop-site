@@ -13,16 +13,11 @@ class Cart(models.Model):
     quantity = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.quantity}از{self.item.title}"
+        return f"/ {self.quantity}تا {self.item.title}"
 
     def price_item(self):
         price = self.item.price * self.quantity
         return price
-
-    # def user_total(self):
-    #     user = self.user
-    #     for _ in self.user:
-    #         if user=
 
     class Meta:
         verbose_name_plural = "سبد خرید"
@@ -38,29 +33,21 @@ class Order(models.Model):
     all_price = models.IntegerField(verbose_name='کل ارزش خرید بدون تخفیف', null=True, blank=True)
     price_pey = models.IntegerField(verbose_name='کل مبلغ پرداخت شده', null=True, blank=True)
     price_coupon = models.IntegerField(verbose_name='مبلغ کد تخفیف', null=True, blank=True)
-    received = models.BooleanField(default=False, verbose_name='تحویل داده شده')
-    refund_requested = models.BooleanField(default=False, verbose_name='درخواست بازگشت پول ')
-    refund_granted = models.BooleanField(default=False, verbose_name='درخواست پول انجام شده')
+
     # --------------
     __original_price = None
-    __product_price = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__original_price = self.all_price
-        self.__product_price = self.total()
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         if self.all_price != self.__original_price:
             self.price_pey = None
             self.price_coupon = None
-            # self.all_price = self.__original_price
-        if self.all_price != self.total():
-            self.all_price = self.total()
         super().save(force_insert, force_update, *args, **kwargs)
-        #  -----
+
         self.__original_price = self.all_price
-        self.__product_price = self.all_price
 
     def total(self):
         item = self.items.all()
@@ -69,15 +56,15 @@ class Order(models.Model):
             a += i.item.price * i.quantity
         return a
 
+    def pay(self):
+        if self.price_coupon:
+            return self.all_price - self.price_coupon
+        else:
+            return self.all_price
+
     def __str__(self):
         return f"{self.user.phone_number}"
 
-    # def total(self):
-    #     tal = 0
-    #     for i in self.items.all():
-    #         # for _ in len(i):
-    #         tal += i.item.price * i.quantity
-    #         return tal
 
     class Meta:
         verbose_name_plural = "سفارش"
