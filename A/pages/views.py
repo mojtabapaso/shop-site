@@ -3,14 +3,11 @@ from django.shortcuts import render, reverse, resolve_url, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from .models import Category
-from products.models import Brand, Products
+from products.models import Products
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
 from products.forms import CommendForm, CommendReplyForm
 from products.models import Commend
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-# from orders.forms import ProductAddForm
 
 
 class HomeView(View):
@@ -18,17 +15,16 @@ class HomeView(View):
 
     def get(self, request, slug_category=None):
         categories = Category.objects.filter(is_sub_category=False)
-        products = Products.objects.filter(is_active =True)
+        products = Products.objects.filter(is_active=True)
         if slug_category:
             category = Category.objects.filter(slug=slug_category)
-            products = Products.objects.filter(Q(category__in=category) )
-        return render(request, 'pages/index.html', {'products': products, 'categories': categories})
+            products = Products.objects.filter(Q(category__in=category))
+        return render(request,self.template_name, {'products': products, 'categories': categories})
 
 
 class ProductsDetailView(View):
     template_name = 'pages/detail.html'
     form_class = CommendForm
-    # form_add_class = ProductAddForm
     form_reply_class = CommendReplyForm
 
     def setup(self, request, *args, **kwargs):

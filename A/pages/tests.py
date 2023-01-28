@@ -1,7 +1,7 @@
-from django.test import TestCase
+
 from django.urls import reverse, resolve
 from .views import HomeView
-
+from django.test import TestCase
 
 class HomePageTest(TestCase):
     def setUp(self):
