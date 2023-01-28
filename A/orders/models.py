@@ -70,16 +70,6 @@ class Order(models.Model):
         verbose_name_plural = "سفارش"
 
 
-class Payment(models.Model):
-    stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    amount = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username
-
-
 class Coupon(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='related_in_coupon')
     code = models.CharField(max_length=15, null=True, blank=True, help_text="Auto Dont Need To Add")

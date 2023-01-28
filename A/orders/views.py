@@ -14,6 +14,7 @@ import requests
 import json
 from django.http import HttpResponse
 import datetime
+
 User = get_user_model()
 
 
@@ -49,7 +50,6 @@ class OrderView(LoginRequiredMixin, AddressIsNotNone, CartIsNotNone, View):
         return super().setup(request, *args, **kwargs)
 
     def get(self, request):
-
         return render(request, self.templates_class, {'form': self.form_class, 'order': self.order})
 
     def post(self, request):
@@ -100,6 +100,7 @@ CallbackURL = 'http://127.0.0.1:8000/orders/verify/'
 class OrderPayView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
+
         request.session['order_pay'] = {
             'order_id': order.id,
         }
@@ -126,7 +127,13 @@ class OrderPayView(LoginRequiredMixin, View):
 class OrderVerifyView(LoginRequiredMixin, View):
     def get(self, request):
         order_id = request.session['order_pay']['order_id']
+
         order = Order.objects.get(id=int(order_id))
+        # for edit value quantity product
+        for i in order.items.all():
+            i.item.quantity = i.item.quantity - i.quantit
+        order.save()
+        
         t_status = request.GET.get('Status')
         t_authority = request.GET['Authority']
         if request.GET.get('Status') == 'OK':
@@ -141,6 +148,7 @@ class OrderVerifyView(LoginRequiredMixin, View):
             if len(req.json()['errors']) == 0:
                 t_status = req.json()['data']['code']
                 if t_status == 100:
+
                     order.ordered = True
                     order.ordered_date = jdatetime.datetime.now()
 
