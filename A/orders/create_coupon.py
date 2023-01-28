@@ -3,7 +3,7 @@ import random
 
 
 
-def create_coupon(request):
+def create_coupon():
     """ create coupon
     use : number 1 to 9 and letters english upper and small
     output : code random 11 digit
