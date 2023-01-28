@@ -3,7 +3,7 @@ from django.test import SimpleTestCase
 
 class RegisterUrlTest(SimpleTestCase):
 
-    def test_url_register(self):
+    def test_register(self):
         url = '/accounts/register/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -57,5 +57,26 @@ class ChangeDateBirthUrlTest(SimpleTestCase):
 class ChangePasswordUrlTest(SimpleTestCase):
     def test_change_password(self):
         url = '/accounts/change/password/'
+        response = self.client.get(url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+class ForgetPasswordUrl(SimpleTestCase):
+    def test_forget_password(self):
+        url = '/accounts/forget/password/'
+        response = self.client.get(url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+class VerifyPassword(SimpleTestCase):
+    def test_verify_password(self):
+        url = '/accounts/verify/password/'
+        response = self.client.get(url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+
+class CreatePassword(SimpleTestCase):
+    def test_create_password(self):
+        url = '/accounts/create/password/'
         response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)

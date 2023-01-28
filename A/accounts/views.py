@@ -208,7 +208,7 @@ class ForgetPasswordView(View):
         return redirect('accounts:forget_password')
 
 
-class VerifyCodePassword(View):
+class VerifyCodePasswordView(View):
     form_class = VerifyCodeForm
     template_class = 'accounts/verify_password.html'
 
@@ -225,7 +225,7 @@ class VerifyCodePassword(View):
                 return redirect('accounts:create_password')
 
 
-class CreateNewPassword(View):
+class CreateNewPasswordView(View):
     form_class = ChangePasswordForm
     template_class = 'accounts/create_password.html'
 

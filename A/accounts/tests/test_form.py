@@ -1,6 +1,5 @@
 from django.test import TestCase
-from ..forms import (UserCreationForm, UserChangeForm, UserRegisterForm, VerifyCodeForm, UserLoginForm,
-                     ChangePasswordForm, DateBirthForm, ProfileForm)
+from ..forms import *
 
 
 class UserCreationFormTest(TestCase):
@@ -61,4 +60,11 @@ class ProfileFormTest(TestCase):
     def test_from(self):
         form_data = {'first_name': 'mojtaba', 'last_name': 'ataei', 'email': 'mojtaba@gamil.com'}
         form = ProfileForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+
+class NumberPhoneForgetPasswordTest(TestCase):
+    def test_form(self):
+        form_data = {'number_phone': '09123456789'}
+        form = NumberPhoneForgetPassword(data=form_data)
         self.assertTrue(form.is_valid())
