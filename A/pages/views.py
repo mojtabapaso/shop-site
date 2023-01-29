@@ -8,10 +8,12 @@ from django.shortcuts import get_object_or_404
 from products.forms import CommendForm, CommendReplyForm
 from products.models import Commend
 from django.contrib.auth.decorators import login_required
+from .froms import SearchForm
 
 
 class HomeView(View):
     template_name = 'pages/index.html'
+    form_class = SearchForm
 
     def get(self, request, slug_category=None):
         categories = Category.objects.filter(is_sub_category=False)
@@ -19,7 +21,11 @@ class HomeView(View):
         if slug_category:
             category = Category.objects.filter(slug=slug_category)
             products = Products.objects.filter(Q(category__in=category))
-        return render(request,self.template_name, {'products': products, 'categories': categories})
+        if request.GET.get('search'):
+            products = products.filter(title__contains=request.GET['search'])
+
+        return render(request, self.template_name,
+                      {'products': products, 'categories': categories, 'form': self.form_class})
 
 
 class ProductsDetailView(View):
