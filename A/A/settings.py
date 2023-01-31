@@ -25,8 +25,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Application definition
-# USE_THOUSAND_SEPARATOR = True
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +44,6 @@ INSTALLED_APPS = [
     # Third Party Apps
     'jalali_date',
     'ckeditor',
-    # 'iranian_cities',
 ]
 
 # Jalali Config Setting
@@ -103,7 +100,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'A.wsgi.application'
 
 # Database
@@ -133,6 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Internationalization
@@ -147,23 +144,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-# MEDIA_ROOT = '/path/to/yourmediafolder/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
-# MEDIA_URL = '/static/'
-# MEDIA_ROOT = BASE_DIR / 'static'
 
 
-# Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Abr Arvan cloud
-aws_access_key_id = 'b6f9c3ff-8cfa-488f-b976-eb644aa21371'
-aws_secret_access_key = '0b2594c48cc82e81f1cc6f21549b0b01f478ce1992a3f7c949f0810cd96b47ad'
-# endpoint_url = ''
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',

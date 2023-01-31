@@ -133,7 +133,7 @@ class OrderVerifyView(LoginRequiredMixin, View):
         for i in order.items.all():
             i.item.quantity = i.item.quantity - i.quantit
         order.save()
-        
+
         t_status = request.GET.get('Status')
         t_authority = request.GET['Authority']
         if request.GET.get('Status') == 'OK':

@@ -1,6 +1,4 @@
 from kavenegar import *
-
-
 def send_otp_code(phone_number, code):
     try:
         api = KavenegarAPI('385737653576716A495368414D32482F4669645556675A444A73517A3034614F38375965496C6A7336546F3D')
@@ -31,3 +29,5 @@ def send_coupon(phone_number, coupon, min_cart, amount):
         print(e)
     except HTTPException as e:
         print(e)
+
+

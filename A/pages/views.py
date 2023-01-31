@@ -56,8 +56,6 @@ class HomeView(View):
                        'filter': self.form_class_2, 'brand': brand})
 
 
-
-
 class ProductsDetailView(View):
     template_name = 'pages/detail.html'
     form_class = CommendForm

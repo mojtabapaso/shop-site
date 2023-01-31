@@ -5,6 +5,8 @@ from django.urls import reverse
 from django_jalali.db import models as jmodels
 from pages.models import Category
 
+User = get_user_model()
+
 
 class Brand(models.Model):
     category = models.ManyToManyField(Category, related_name='brand', verbose_name='دسته بندی')
@@ -36,18 +38,21 @@ class Products(models.Model):
     def get_absolute_url(self):
         return reverse('pages:product_detail', kwargs={'slug': self.slug})
 
-    def get_add_to_cart_url(self):
-        return reverse("pages:add-to-cart", kwargs={'slug': self.slug})
+    def get_brand_product(self):
+        return reverse('pages:brand_slug', kwargs={'slug': self.brand.slug})
 
-    def get_remove_from_cart_url(self):
-        return reverse("pages:remove-from-cart", kwargs={'slug': self.slug})
+    # def get_add_to_cart_url(self):
+    #     return reverse("pages:add-to-cart", kwargs={'slug': self.slug})
+    #
+    # def get_remove_from_cart_url(self):
+    #     return reverse("pages:remove-from-cart", kwargs={'slug': self.slug})
 
     class Meta:
         verbose_name_plural = "محصول"
 
 
 class Commend(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, verbose_name='کاربر')
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='کاربر')
     product = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='محصول')
     reply = models.ForeignKey('self', on_delete=models.CASCADE, related_name='reply_commend', null=True, blank=True,
                               verbose_name='پاسخ')

@@ -5,7 +5,7 @@ app_name = 'orders'
 
 urlpatterns = [
     path('order/', views.OrderView.as_view(), name='order_item'),
-    path('d/', views.create_order, name='create_order'),
+    path('create/order/', views.create_order, name='create_order'),
     path('cart/', views.OrderSummaryView.as_view(), name='summary_cart'),
     # this under usl`s for add and remove and delete product from order
     path('add/<slug:product_slug>/', views.add_to_cart, name='add_cart'),

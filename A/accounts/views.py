@@ -5,12 +5,11 @@ from .forms import UserRegisterForm, VerifyCodeForm, UserLoginForm, ChangePasswo
     NumberPhoneForgetPassword
 from .models import User
 from random import randint
-from jalali_date import datetime2jalali, date2jalali
-from .models import OtpCode, Profile
+from .models import OtpCode
 from utils import send_otp_code
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
+
 
 
 class RegisterView(View):

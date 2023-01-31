@@ -13,7 +13,7 @@ class Cart(models.Model):
     quantity = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"/ {self.quantity}تا {self.item.title}"
+        return f"{self.quantity}تا{self.item.title}"
 
     def price_item(self):
         price = self.item.price * self.quantity
@@ -51,10 +51,10 @@ class Order(models.Model):
 
     def total(self):
         item = self.items.all()
-        a = 0
+        var = 0
         for i in item:
-            a += i.item.price * i.quantity
-        return a
+            var += i.item.price * i.quantity
+        return var
 
     def pay(self):
         if self.price_coupon:
