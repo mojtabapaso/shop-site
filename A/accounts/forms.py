@@ -1,10 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-
-# from orders.models import Address
 from .models import User, Profile
-from django.core.validators import MinLengthValidator
 from .validator import validate_year
 from django.contrib.auth.password_validation import validate_password
 

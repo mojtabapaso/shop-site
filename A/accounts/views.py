@@ -221,8 +221,13 @@ class VerifyCodePasswordView(View):
             code = form.cleaned_data['code']
             phone = request.session['user_forget_password']['number_phone']
             otp = OtpCode.objects.get(phone_number=phone)
+            if not otp.active:
+                messages.error(request, 'کد شما منقضی شده است!')
+                return redirect('accounts:forget_password')
             if otp.code == code:
                 return redirect('accounts:create_password')
+        messages.error(request, "مشگلی پیش آمد دوباره تلاش کنید")
+        return redirect('accounts:forget_password')
 
 
 class CreateNewPasswordView(View):

@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django_jalali.db import models as jmodels
@@ -33,7 +35,9 @@ class User(AbstractBaseUser):
 class OtpCode(models.Model):
     phone_number = models.CharField(max_length=11)
     code = models.PositiveSmallIntegerField()
-    created = models.DateTimeField(auto_now=True)
+    create = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    expire = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.phone_number} - {self.code} '
