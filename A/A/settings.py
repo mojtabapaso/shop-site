@@ -34,13 +34,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #  Add
     'django.contrib.humanize',
-
     # Local App
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
-
     # Third Party Apps
     'jalali_date',
     'ckeditor',
@@ -56,12 +54,7 @@ JALALI_DATE_DEFAULTS = {
         'js': [
             # loading date picker
             'admin/js/django_jalali.min.js',
-            # OR
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
-            # 'admin/js/main.js',
+ 
         ],
         'css': {
             'all': [
